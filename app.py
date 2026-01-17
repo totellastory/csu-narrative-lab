@@ -88,10 +88,48 @@ if st.session_state.verdict:
 
 # --- IF APPROVED, SHOW PART B & C ---
 if st.session_state.character_approved:
-    
-    # --- PART B: THE CHAT SIMULATION ---
+
+    # --- PART C: THE ANTAGONIST DUEL (MOVED UP - NOW STEP 2) ---
     st.divider()
-    st.subheader(f"Step 2: Interviewing {name}")
+    st.subheader("Step 2: The Conflict Test")
+    st.caption("Define an antagonist to test if the conflict creates true drama.")
+    
+    col_a, col_b = st.columns(2)
+    with col_a:
+        antag_name = st.text_input("Antagonist Name", value="The Father")
+    with col_b:
+        antag_belief = st.text_input("Opposing Belief/Goal", value="The past should remain buried.")
+        
+    if st.button("🔥 Simulate Duel"):
+        with st.spinner("Writing scene..."):
+            duel_prompt = f"""
+            Write a dramatic dialogue scene between {name} and {antag_name}.
+            
+            CHARACTER 1: {name}
+            Goal: {goal}
+            Deep Need: {need}
+            
+            CHARACTER 2: {antag_name}
+            Opposing Belief: {antag_belief}
+            
+            SETTING: A tense location relevant to the story.
+            
+            INSTRUCTION: 
+            They must argue. {antag_name} should attack {name}'s goal using their opposing belief. 
+            {name} must defend their goal but struggle against the validity of the antagonist's point.
+            Show the conflict rising.
+            """
+            
+            try:
+                scene = model.generate_content(duel_prompt).text
+                st.markdown("### 🎬 The Scene")
+                st.markdown(scene)
+            except Exception as e:
+                st.error(f"Error generating scene: {e}")
+    
+    # --- PART B: THE CHAT SIMULATION (MOVED DOWN - NOW STEP 3) ---
+    st.divider()
+    st.subheader(f"Step 3: Interviewing {name}")
     st.caption("Try to expose their hidden truth to break them.")
 
     for msg in st.session_state.chat_log:
@@ -124,41 +162,3 @@ if st.session_state.character_approved:
         reply = model.generate_content(f"{sys_msg}\nUser: {user_input}").text
         st.session_state.chat_log.append({"role": "assistant", "content": reply})
         st.rerun()
-
-    # --- PART C: THE ANTAGONIST DUEL (NEW!) ---
-    st.divider()
-    st.subheader("Step 3: The Conflict Test")
-    st.caption("Define an antagonist to test if the conflict creates true drama.")
-    
-    col_a, col_b = st.columns(2)
-    with col_a:
-        antag_name = st.text_input("Antagonist Name", value="The Father")
-    with col_b:
-        antag_belief = st.text_input("Opposing Belief/Goal", value="The past should remain buried to protect the family reputation.")
-        
-    if st.button("🔥 Simulate Duel"):
-        with st.spinner("Writing scene..."):
-            duel_prompt = f"""
-            Write a dramatic dialogue scene between {name} and {antag_name}.
-            
-            CHARACTER 1: {name}
-            Goal: {goal}
-            Deep Need: {need}
-            
-            CHARACTER 2: {antag_name}
-            Opposing Belief: {antag_belief}
-            
-            SETTING: A tense location relevant to the story.
-            
-            INSTRUCTION: 
-            They must argue. {antag_name} should attack {name}'s goal using their opposing belief. 
-            {name} must defend their goal but struggle against the validity of the antagonist's point.
-            Show the conflict rising.
-            """
-            
-            try:
-                scene = model.generate_content(duel_prompt).text
-                st.markdown("### 🎬 The Scene")
-                st.markdown(scene)
-            except Exception as e:
-                st.error(f"Error generating scene: {e}")
