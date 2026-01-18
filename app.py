@@ -70,7 +70,7 @@ with st.expander("📝 Step 1: Define Character", expanded=not st.session_state.
                 2. A specific paragraph explaining why the character works, citing the text.
                 3. A specific paragrapgh explaining why the arc works
 
-                CONSTRAINT: Keep the total response concise and under 150 words.
+                CONSTRAINT: Keep the total response concise and under 300 words.
                 """
                 try:
                     response = model.generate_content(prompt)
