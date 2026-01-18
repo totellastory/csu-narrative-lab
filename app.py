@@ -67,10 +67,13 @@ with st.expander("📝 Step 1: Define Character", expanded=not st.session_state.
                 TASK: Analyze if this character and arc work. Start with SOLID or WEAK.
                 - If specific plot details are missing, extrapolate likely conflicts based on the gap between the Goal and the Need.
                 - You may cite famous comparable stories (e.g., Hamlet, The Godfather) to illustrate why the arc works or fails.
-                OUTPUT: 
+                OUTPUT FORMAT: 
+                1. OUTPUT FORMAT: 
                 1. The Verdict (SOLID/WEAK).
-                2. A specific paragraph explaining why the character works, citing the text.
-                3. A specific paragrapgh explaining why the arc works
+                2. ### Why the Character Works (or "Why the Character Doesn't Work")
+                   [Analysis paragraph]
+                3. ### Why the Arc Works (or "Why the Arc Doesn't Work")
+                   [Analysis paragraph]
 
                 CONSTRAINT: Keep the total response concise and under 200 words. Avoid abstract theory; focus on story logic.
                 """
