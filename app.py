@@ -10,7 +10,7 @@ if "authenticated" not in st.session_state:
 
 if not st.session_state.authenticated:
     st.title("🔒 Narrative Lab Access")
-    st.markdown("Please enter the access code provided for the CSU Workshop.")
+    st.markdown("Please enter the access code.")
     password = st.text_input("Enter Access Code:", type="password")
     if st.button("Enter"):
         if password == "CSU2025": 
@@ -48,7 +48,7 @@ with st.expander("📝 Step 1: Define Character", expanded=not st.session_state.
         goal = st.text_input("Conscious Goal", value="To leave money for his family")
     with col2:
         truth = st.text_input("Hidden Truth/Lie", value="Overcome humiliation, not being recognized")
-        need = st.text_input("Inner Need", value="Force the world to acknoledge his greatness")
+        need = st.text_input("Inner Need", value="Force the world to acknowledge his greatness")
 
     uploaded_file = st.file_uploader("Upload Rulebook (txt)", type=["txt"])
 
