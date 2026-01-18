@@ -33,7 +33,7 @@ except Exception as e:
 
 # --- 3. THE INTERFACE ---
 st.title("🎭 The Universal Dramaturg")
-st.markdown("Test your character against the masters: **Aristotle, McKee, or Egri**.")
+st.markdown("Test your character against the masters: **McKee, or Egri**.")
 
 # Session State Variables
 if "verdict" not in st.session_state: st.session_state.verdict = None
@@ -44,11 +44,11 @@ if "character_approved" not in st.session_state: st.session_state.character_appr
 with st.expander("📝 Step 1: Define Character", expanded=not st.session_state.character_approved):
     col1, col2 = st.columns(2)
     with col1:
-        name = st.text_input("Character Name", value="Paula Dahlen")
-        goal = st.text_input("Conscious Goal", value="Find her missing sister")
+        name = st.text_input("Character Name", value="Walter White")
+        goal = st.text_input("Conscious Goal", value="To leave money for his family")
     with col2:
-        truth = st.text_input("Hidden Truth/Lie", value="She is obsessed and guilty")
-        need = st.text_input("Inner Need", value="To forgive herself")
+        truth = st.text_input("Hidden Truth/Lie", value="Overcome humiliation, not being recognized")
+        need = st.text_input("Inner Need", value="Force the world to acknoledge his greatness")
 
     uploaded_file = st.file_uploader("Upload Rulebook (txt)", type=["txt"])
 
@@ -64,10 +64,11 @@ with st.expander("📝 Step 1: Define Character", expanded=not st.session_state.
                 
                 CANDIDATE: Name: {name}, Goal: {goal}, Truth: {truth}, Need: {need}
                 
-                TASK: Analyze if this arc works. Start with SOLID or WEAK.
+                TASK: Analyze if this character and arc work. Start with SOLID or WEAK.
                 OUTPUT: 
                 1. The Verdict (SOLID/WEAK).
-                2. A detailed paragraph explaining why, citing the text.
+                2. A detailed paragraph explaining why the character works, citing the text.
+                3. A detailed paragrapgh explaining why the arc works
                 """
                 try:
                     response = model.generate_content(prompt)
@@ -96,9 +97,9 @@ if st.session_state.character_approved:
     
     col_a, col_b = st.columns(2)
     with col_a:
-        antag_name = st.text_input("Antagonist Name", value="The Father")
+        antag_name = st.text_input("Antagonist Name", value="Hank Schrader")
     with col_b:
-        antag_belief = st.text_input("Opposing Belief/Goal", value="The past should remain buried.")
+        antag_belief = st.text_input("Opposing Belief/Goal", value="I represent the power of the law. Emotions are for weaklings.")
         
     if st.button("🔥 Simulate Duel"):
         with st.spinner("Writing scene..."):
