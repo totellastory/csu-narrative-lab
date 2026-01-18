@@ -65,12 +65,14 @@ with st.expander("📝 Step 1: Define Character", expanded=not st.session_state.
                 CANDIDATE: Name: {name}, Goal: {goal}, Truth: {truth}, Need: {need}
                 
                 TASK: Analyze if this character and arc work. Start with SOLID or WEAK.
+                - If specific plot details are missing, extrapolate likely conflicts based on the gap between the Goal and the Need.
+                - You may cite famous comparable stories (e.g., Hamlet, The Godfather) to illustrate why the arc works or fails.
                 OUTPUT: 
                 1. The Verdict (SOLID/WEAK).
                 2. A specific paragraph explaining why the character works, citing the text.
                 3. A specific paragrapgh explaining why the arc works
 
-                CONSTRAINT: Keep the total response concise and under 300 words.
+                CONSTRAINT: Keep the total response concise and under 200 words. Avoid abstract theory; focus on story logic.
                 """
                 try:
                     response = model.generate_content(prompt)
