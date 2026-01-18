@@ -67,8 +67,10 @@ with st.expander("📝 Step 1: Define Character", expanded=not st.session_state.
                 TASK: Analyze if this character and arc work. Start with SOLID or WEAK.
                 OUTPUT: 
                 1. The Verdict (SOLID/WEAK).
-                2. A detailed paragraph explaining why the character works, citing the text.
-                3. A detailed paragrapgh explaining why the arc works
+                2. A specific paragraph explaining why the character works, citing the text.
+                3. A specific paragrapgh explaining why the arc works
+
+                CONSTRAINT: Keep the total response concise and under 150 words.
                 """
                 try:
                     response = model.generate_content(prompt)
@@ -119,6 +121,12 @@ if st.session_state.character_approved:
             They must argue. {antag_name} should attack {name}'s goal using their opposing belief. 
             {name} must defend their goal but struggle against the validity of the antagonist's point.
             Show the conflict rising.
+
+            FORMATTING RULES:
+            1. Use standard screenplay format.
+            2. NO PARENTHETICALS for internal thoughts (e.g., do not write "(he thinks about it)").
+            3. Use parentheticals ONLY for brief physical actions (e.g., "(slams table)").
+            4. Keep the dialogue snappy and fast-paced.
             """
             
             try:
