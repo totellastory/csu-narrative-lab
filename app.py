@@ -128,10 +128,12 @@ if st.session_state.character_approved:
             Show the conflict rising.
 
             FORMATTING RULES:
-            1. Use standard screenplay format.
-            2. NO PARENTHETICALS for internal thoughts (e.g., do not write "(he thinks about it)").
-            3. Use parentheticals ONLY for brief physical actions (e.g., "(slams table)").
-            4. Keep the dialogue snappy and fast-paced.
+            1. Use a simple script format.
+            2. Write Character Names in **BOLD CAPS**.
+            3. Put dialogue on the next line.
+            4. Do NOT use HTML tags (like <center>).
+            5. NO PARENTHETICALS for internal thoughts.
+            6. Keep the dialogue snappy and fast-paced.
             """
             
             try:
