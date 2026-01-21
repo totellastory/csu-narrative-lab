@@ -9,7 +9,7 @@ if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
 if not st.session_state.authenticated:
-    st.title("🔒 Narrative Lab Access")
+    st.title("🔒 Narrative Lab Access v2")
     st.markdown("Please enter the access code.")
     password = st.text_input("Enter Access Code:", type="password")
     if st.button("Enter"):
