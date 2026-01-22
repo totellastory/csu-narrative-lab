@@ -22,10 +22,9 @@ if not st.session_state.authenticated:
 
 # --- 2. API SETUP ---
 try:
-    # We use GEMINI_API_KEY because you renamed it in Secrets
     if "GEMINI_API_KEY" in st.secrets:
         genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-        # We define the model globally here for the old library
+        # Using gemini-pro because it is confirmed working in your Colab
         model = genai.GenerativeModel('gemini-pro')
     else:
         st.error("API Key missing. Please check Streamlit Secrets.")
