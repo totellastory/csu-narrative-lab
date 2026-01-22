@@ -26,7 +26,7 @@ try:
     if "GEMINI_API_KEY" in st.secrets:
         genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
         # We define the model globally here for the old library
-        model = genai.GenerativeModel('gemini-1.5-flash-latest')
+        model = genai.GenerativeModel('gemini-pro')
     else:
         st.error("API Key missing. Please check Streamlit Secrets.")
         st.stop()
