@@ -25,7 +25,7 @@ try:
     if "GEMINI_API_KEY" in st.secrets:
         genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
         # Using gemini-pro because it is confirmed working in your Colab
-        model = genai.GenerativeModel('gemini-pro')
+        model = genai.GenerativeModel('models/gemini-2.0-flash')
     else:
         st.error("API Key missing. Please check Streamlit Secrets.")
         st.stop()
