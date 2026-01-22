@@ -1,5 +1,6 @@
 import streamlit as st
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 
 # --- 1. SETUP & PASSWORD PROTECTION ---
 st.set_page_config(page_title="CSU Narrative Lab", page_icon="🎭")
@@ -21,10 +22,10 @@ if not st.session_state.authenticated:
     st.stop() 
 
 # --- 2. API SETUP ---
+# Initialize the Client (The new way)
 try:
-    if "GOOGLE_API_KEY" in st.secrets:
-        genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
-        model = genai.GenerativeModel('gemini-1.5-flash')
+    if "GEMINI_API_KEY" in st.secrets:
+        client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"]) 
     else:
         st.error("API Key missing. Please set up secrets.")
         st.stop()
@@ -68,16 +69,22 @@ with st.expander("📝 Step 1: Define Character", expanded=not st.session_state.
                 - If specific plot details are missing, extrapolate likely conflicts based on the gap between the Goal and the Need.
                 - You may cite famous comparable stories (e.g., Hamlet, The Godfather) to illustrate why the arc works or fails.
                 OUTPUT FORMAT: 
-                # The Verdict (SOLID/WEAK).
-                ### Why the Character Works (or "Why the Character Doesn't Work")
-                   [Analysis paragraph]
-                ### Why the Arc Works (or "Why the Arc Doesn't Work")
-                   [Analysis paragraph]
-
-                CONSTRAINT: Keep the total response concise and under 200 words. Avoid abstract theory; focus on story logic.
+                # VERDICT: [SOLID/WEAK]
+                
+                ### Why the Character Works
+                [Analysis paragraph]
+                
+                ### Why the Arc Works
+                [Analysis paragraph]
+                
+                CONSTRAINT: Keep the total response concise and under 200 words. Avoid abstract theory; focus on story logic. Do NOT use numbered lists.
                 """
                 try:
-                    response = model.generate_content(prompt)
+                    # UPDATED SYNTAX: client.models.generate_content
+                    response = client.models.generate_content(
+                        model="gemini-1.5-flash",
+                        contents=prompt
+                    )
                     st.session_state.verdict = response.text
                     
                     if "SOLID" in response.text:
@@ -136,7 +143,12 @@ if st.session_state.character_approved:
             """
             
             try:
-                scene = model.generate_content(duel_prompt).text
+                # UPDATED SYNTAX
+                response = client.models.generate_content(
+                    model="gemini-1.5-flash",
+                    contents=duel_prompt
+                )
+                scene = response.text
                 st.markdown("### 🎬 The Scene")
                 st.markdown(scene)
             except Exception as e:
@@ -164,7 +176,11 @@ if st.session_state.character_approved:
         """
         is_triggered = False
         try:
-            check = model.generate_content(trigger_prompt)
+            # UPDATED SYNTAX
+            check = client.models.generate_content(
+                model="gemini-1.5-flash",
+                contents=trigger_prompt
+            )
             if "YES" in check.text.upper():
                 is_triggered = True
         except: pass
@@ -174,6 +190,15 @@ if st.session_state.character_approved:
         else:
             sys_msg = f"You are {name}. Goal: {goal}. Hide secret: {truth}. Be polite but distant."
 
-        reply = model.generate_content(f"{sys_msg}\nUser: {user_input}").text
+        # UPDATED SYNTAX WITH CONFIG
+        response = client.models.generate_content(
+            model="gemini-1.5-flash",
+            contents=f"{sys_msg}\nUser: {user_input}",
+            config=types.GenerateContentConfig(
+                temperature=0.7
+            )
+        )
+        reply = response.text
+        
         st.session_state.chat_log.append({"role": "assistant", "content": reply})
         st.rerun()
