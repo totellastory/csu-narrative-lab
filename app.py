@@ -1,6 +1,5 @@
 import streamlit as st
-from google import genai
-from google.genai import types
+import google.generativeai as genai
 
 # --- 1. SETUP & PASSWORD PROTECTION ---
 st.set_page_config(page_title="CSU Narrative Lab", page_icon="🎭")
@@ -10,7 +9,7 @@ if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 
 if not st.session_state.authenticated:
-    st.title("🔒 Narrative Lab Access v2")
+    st.title("🔒 Narrative Lab Access")
     st.markdown("Please enter the access code.")
     password = st.text_input("Enter Access Code:", type="password")
     if st.button("Enter"):
@@ -22,12 +21,14 @@ if not st.session_state.authenticated:
     st.stop() 
 
 # --- 2. API SETUP ---
-# Initialize the Client (The new way)
 try:
+    # We use GEMINI_API_KEY because you renamed it in Secrets
     if "GEMINI_API_KEY" in st.secrets:
-        client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"]) 
+        genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+        # We define the model globally here for the old library
+        model = genai.GenerativeModel('gemini-1.5-flash')
     else:
-        st.error("API Key missing. Please set up secrets.")
+        st.error("API Key missing. Please check Streamlit Secrets.")
         st.stop()
 except Exception as e:
     st.error(f"Connection Error: {e}")
@@ -80,11 +81,7 @@ with st.expander("📝 Step 1: Define Character", expanded=not st.session_state.
                 CONSTRAINT: Keep the total response concise and under 200 words. Avoid abstract theory; focus on story logic. Do NOT use numbered lists.
                 """
                 try:
-                    # UPDATED SYNTAX: client.models.generate_content
-                    response = client.models.generate_content(
-                        model="gemini-1.5-flash",
-                        contents=prompt
-                    )
+                    response = model.generate_content(prompt)
                     st.session_state.verdict = response.text
                     
                     if "SOLID" in response.text:
@@ -103,7 +100,7 @@ if st.session_state.verdict:
 # --- IF APPROVED, SHOW PART B & C ---
 if st.session_state.character_approved:
 
-    # --- PART C: THE ANTAGONIST DUEL (MOVED UP - NOW STEP 2) ---
+    # --- PART C: THE ANTAGONIST DUEL ---
     st.divider()
     st.subheader("Step 2: The Conflict Test")
     st.caption("Define an antagonist to test if the conflict creates true drama.")
@@ -143,18 +140,14 @@ if st.session_state.character_approved:
             """
             
             try:
-                # UPDATED SYNTAX
-                response = client.models.generate_content(
-                    model="gemini-1.5-flash",
-                    contents=duel_prompt
-                )
+                response = model.generate_content(duel_prompt)
                 scene = response.text
                 st.markdown("### 🎬 The Scene")
                 st.markdown(scene)
             except Exception as e:
                 st.error(f"Error generating scene: {e}")
     
-    # --- PART B: THE CHAT SIMULATION (MOVED DOWN - NOW STEP 3) ---
+    # --- PART B: THE CHAT SIMULATION ---
     st.divider()
     st.subheader(f"Step 3: Interviewing {name}")
     st.caption("Try to expose their hidden truth to break them.")
@@ -176,11 +169,7 @@ if st.session_state.character_approved:
         """
         is_triggered = False
         try:
-            # UPDATED SYNTAX
-            check = client.models.generate_content(
-                model="gemini-1.5-flash",
-                contents=trigger_prompt
-            )
+            check = model.generate_content(trigger_prompt)
             if "YES" in check.text.upper():
                 is_triggered = True
         except: pass
@@ -190,14 +179,7 @@ if st.session_state.character_approved:
         else:
             sys_msg = f"You are {name}. Goal: {goal}. Hide secret: {truth}. Be polite but distant."
 
-        # UPDATED SYNTAX WITH CONFIG
-        response = client.models.generate_content(
-            model="gemini-1.5-flash",
-            contents=f"{sys_msg}\nUser: {user_input}",
-            config=types.GenerateContentConfig(
-                temperature=0.7
-            )
-        )
+        response = model.generate_content(f"{sys_msg}\nUser: {user_input}")
         reply = response.text
         
         st.session_state.chat_log.append({"role": "assistant", "content": reply})
