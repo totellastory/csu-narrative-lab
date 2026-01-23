@@ -71,10 +71,10 @@ with st.expander("📝 Step 1: Define Character", expanded=not st.session_state.
                 OUTPUT FORMAT: 
                 # VERDICT: [SOLID/WEAK]
                 
-                ### Why the Character Works
+                ### Does the Character Work?
                 [Analysis paragraph]
                 
-                ### Why the Arc Works
+                ### Does the Arc Work?
                 [Analysis paragraph]
                 
                 CONSTRAINT: Keep the total response concise and under 200 words. Avoid abstract theory; focus on story logic. Do NOT use numbered lists.
